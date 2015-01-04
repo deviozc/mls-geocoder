@@ -14,8 +14,8 @@ var MongoClient = require('mongodb').MongoClient;
         var collection = db.collection('property');
         collection.find({
             status: 'imported'
-        }).limit(50).toArray(function(err, properties) {
-            if(err){
+        }).limit(2000).toArray(function(err, properties) {
+            if(err) {
                 console.log(err);
             }
             var i = 0;
@@ -28,16 +28,18 @@ var MongoClient = require('mongodb').MongoClient;
                     }, {
                         $set: {
                             status: 'processed',
-                            longitude: res[0].longitude,
-                            latitude: res[0].latitude
+                            location: {
+                                longitude: res[0].longitude,
+                                latitude: res[0].latitude,
+                            }
                         }
-                    }, function(err, result){
-                        console.log(result);
+                    }, function(err, result) {
+                        console.log(res);
                     });
                 });
                 if(++i < properties.length) {
-                    setTimeout(loop, 250); // call myself in 2 seconds time if required
-                }else{
+                    setTimeout(loop, 500); // call myself in 2 seconds time if required
+                } else {
                     db.close();
                 }
             })();
