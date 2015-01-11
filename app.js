@@ -23,6 +23,7 @@ var MongoClient = require('mongodb').MongoClient;
                 var property = properties[i];
                 var address = property.fullAddress + ", " + property.city + ", BC, Canada";
                 geocoder.geocode(address, function(err, res) {
+                    if(!!err){console.log(err); return;}
                     collection.update({
                         _id: property._id
                     }, {
